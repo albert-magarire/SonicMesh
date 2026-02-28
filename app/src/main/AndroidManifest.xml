@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- ───────────────────────────────────────────────────────────────────────
+         Bluetooth (legacy — Android < 12)
+    ─────────────────────────────────────────────────────────────────────────── -->
+    <uses-permission android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
+
+    <!-- ───────────────────────────────────────────────────────────────────────
+         Bluetooth (Android 12+ / API 31+)
+    ─────────────────────────────────────────────────────────────────────────── -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE"
+        android:usesPermissionFlags="neverForLocation" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
+
+    <!-- ───────────────────────────────────────────────────────────────────────
+         WiFi Direct (required by Nearby Connections)
+    ─────────────────────────────────────────────────────────────────────────── -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+
+    <!-- ───────────────────────────────────────────────────────────────────────
+         Location (required by Nearby Connections to scan for BT/WiFi)
+    ─────────────────────────────────────────────────────────────────────────── -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- ───────────────────────────────────────────────────────────────────────
+         Audio — ggwave ultrasonic TX/RX
+    ─────────────────────────────────────────────────────────────────────────── -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- ───────────────────────────────────────────────────────────────────────
+         Camera — SOS imagery
+    ─────────────────────────────────────────────────────────────────────────── -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- ───────────────────────────────────────────────────────────────────────
+         Storage — saving received images
+    ─────────────────────────────────────────────────────────────────────────── -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <!-- ───────────────────────────────────────────────────────────────────────
+         Foreground service — keeps mesh alive in background
+    ─────────────────────────────────────────────────────────────────────────── -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Notifications (Android 13+ / API 33 requires runtime permission) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Internet (Metro dev server + future relay) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Vibration for SOS alerts -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- Hardware features (non-required so app works on devices without them) -->
+    <uses-feature android:name="android.hardware.bluetooth"      android:required="false" />
+    <uses-feature android:name="android.hardware.bluetooth_le"   android:required="false" />
+    <uses-feature android:name="android.hardware.wifi.direct"    android:required="false" />
+    <uses-feature android:name="android.hardware.microphone"     android:required="false" />
+    <uses-feature android:name="android.hardware.camera.any"     android:required="false" />
+
+    <application
+        android:name=".MainApplication"
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:allowBackup="false"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- Deep link for background service notification tap -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="sonicmesh" android:host="chat" />
+            </intent-filter>
+        </activity>
+
+        <!-- Background Actions foreground service -->
+        <service
+            android:name="com.asterinet.react.bgactions.RNBackgroundActionsTask"
+            android:foregroundServiceType="connectedDevice|microphone" />
+
+    </application>
+</manifest>
