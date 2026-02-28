@@ -122,15 +122,6 @@ The app requests all permissions at launch. On Android, ensure you accept:
 - Microphone (ultrasonic RX)
 - Camera
 
-## Demo Choreography (Hackathon)
-
-1. **Open the app on 3 phones** → all should show each other on Network tab
-2. **Type a message on Phone 1** → appears on 2 & 3 within ~1 second
-3. **Send an SOS photo** from Camera screen → arrives on other phones
-4. **Disable WiFi + Bluetooth on Phone 2** → show it switches to Sonic mode
-5. **Hold phones close** → text transmits via ultrasound, decoded on Phone 3
-6. **Show Diagnostics overlay** → judges see the raw gossip layer live
-
 ## Key Design Decisions
 
 - **WatermelonDB over AsyncStorage:** SQLite with JSI gives ~10x faster reactive queries; critical for real-time mesh state.
